@@ -1,16 +1,16 @@
-# Project Title
+# SPAMSLEUTH
 
 Welcome to our project! This document provides a comprehensive guide on how to set up and run our application. Follow the steps below to get started.
 
 ## Introduction
 
-This project is designed to provide [brief description of what the project does]. The following guide will help you get the application up and running on your local machine.
+This project is designed to provide a possible spam content/group detector service. The following guide will help you get the application up and running on your local machine.
 
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 - You have installed Python 3.7 or higher.
-- You have installed necessary dependencies.
+- You have installed the necessary dependencies.
 
 ## Installation
 
