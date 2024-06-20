@@ -26,7 +26,7 @@ Before you begin, ensure you have met the following requirements:
    ```bash
    python run.py
 
-   Wait for the loading process to complete. This might take a few moments as the application sets up.
+Wait for the loading process to complete. This might take a few moments as the application sets up.
 
 4. Accessing the Application:
    Once the application is running, it will provide a port address. Click the given port address (e.g., http://127.0.0.1:5000) to access the application in your web browser.
