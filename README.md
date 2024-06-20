@@ -19,9 +19,11 @@ Before you begin, ensure you have met the following requirements:
    git clone https://github.com/Blackbear000/SPAMSLEUTH.git
 
 2. Navigate to the project directory:
+   ```bash
    cd SPAMSLEUTH
 
 3. Running the Application:
+   ```bash
    python run.py
 
    Wait for the loading process to complete. This might take a few moments as the application sets up.
