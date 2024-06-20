@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Social Media</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Social Media" />
+    <script type="application/x-javascript">
+      addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+    </script>
+    <!-- Custom Theme files -->
+    <link
+      href="{{ url_for('static', filename='css/style.css') }}"
+      rel="stylesheet"
+      type="text/css"
+      media="all"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/font-awesome.css') }}"
+    />
+    <!-- Font-Awesome-Icons-CSS -->
+    <!-- //Custom Theme files -->
+    <!-- web font -->
+    <link
+      href="//fonts.googleapis.com/css?family=Josefin+Sans:100,100i,300,300i,400,400i,600,600i,700,700i&amp;subset=latin-ext"
+      rel="stylesheet"
+    />
+    <!-- //web font -->
+  </head>
+  <body>
+    <!-- main -->
+    <div class="main-agileits">
+      <h1>Social Media Detector</h1>
+      <div class="mainw3-agileinfo form">
+        <div class="contact-w3left">
+          <!-- <img src="{{ url_for('static', filename="img/fighting.jpg") }}"> -->
+          <img src="{{ url_for('static', filename="images/3.png") }}" alt=" " />
+        </div>
+        <div class="contact-grid agileits">
+          <div class="button-container" id="button-container">
+            <div class="">
+              <input
+                type="submit"
+                value="Spam Detector"
+                id="chatbot-btn"
+                onclick="showPipe()"
+              />
+            </div>
+            <div class="">
+              <input
+                type="submit"
+                value="Spam Group Detector"
+                id="analyzer-btn"
+                onclick="showAnalyzer()"
+              />
+            </div>
+          </div>
+          <input
+            type="submit"
+            value="Prepare Model"
+            id="pipe-btn"
+            onclick="showChat()"
+            style="margin-top: 30px; display: block"
+          />
+          <div
+            class=""
+            id="time-warning"
+            style="margin-top: 20px; display: none; color: white"
+          >
+            Processing...
+          </div>
+          <div id="chat-container" style="margin-top: 20px; display: none">
+            <input
+              type="text"
+              id="user-input"
+              placeholder="Please type here..."
+            />
+            <button id="send-btn">Send</button>
+            <div id="chat-box" style="margin-top: 30px; color: white"></div>
+          </div>
+          <div id="analyzer-container" style="display: none">
+            <input
+              type="file"
+              id="csv-file"
+              style="margin-top: 30px; display: none; color: white"
+              accept=".csv"
+            />
+            <input
+              id="upload-btn"
+              value="Analyze"
+              type="submit"
+              style="margin-top: 30px; display: none"
+            />
+            <div
+              id="new-content-area"
+              style="margin-top: 30px; color: white"
+            ></div>
+            <input
+              type="text"
+              id="user-input2"
+              placeholder="Please enter a specific product ID that you want to look into..."
+              style="margin-top: 30px; display: none; color: white"
+            />
+            <input
+              id="generate-btn"
+              value="generate"
+              type="submit"
+              style="margin-top: 30px; display: none"
+            />
+            <div
+              id="image1"
+              style="margin-top: 30px; display: none; color: white"
+            >
+              <h2>Restaurant Reviewers</h2>
+              <img id="restaurantImage" src="" alt="Restaurant Reviewers" />
+            </div>
+            <div
+              id="image2"
+              style="margin-top: 30px; display: none; color: white"
+            >
+              <h2>Spam Group Relationships</h2>
+              <img id="spamImage" src="" alt="Spam Group Relationships" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //main -->
+
+    <script>
+      const chatBox = document.getElementById("chat-box");
+      const userInput = document.getElementById("user-input");
+      const sendBtn = document.getElementById("send-btn");
+      const chatbotBtn = document.getElementById("chatbot-btn");
+      const analyzerContainer = document.getElementById("analyzer-container");
+      const analyzerBtn = document.getElementById("analyzer-btn");
+      const uploadBtn = document.getElementById("upload-btn");
+      const csvFileInput = document.getElementById("csv-file");
+      const newContentArea = document.getElementById("new-content-area");
+
+      function addUserMessage(message) {
+        chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+      }
+
+      function addBotMessage(message) {
+        chatBox.innerHTML += `<div><strong>Bot:</strong> ${message}</div><div style="height: 20px;"></div>`;
+      }
+
+      function sendMessageToBackend(message) {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "/your_backend_endpoint", true);
+
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              const response = JSON.parse(xhr.responseText);
+              addBotMessage(response.response);
+            } else {
+              addBotMessage(
+                "Sorry I cannot understand it. Can you say that again?"
+              );
+            }
+          }
+        };
+
+        xhr.send(JSON.stringify({ message: message }));
+      }
+
+      function sendMessage() {
+        const message = userInput.value.trim();
+        if (message !== "") {
+          addUserMessage(message);
+          sendMessageToBackend(message);
+          userInput.value = "";
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      }
+
+      sendBtn.addEventListener("click", sendMessage);
+      userInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      function showPipe() {
+        document.getElementById("pipe-btn").style.display = "block";
+        document.getElementById("time-warning").style.display = "none";
+        analyzerContainer.style.display = "none";
+      }
+
+      function showChat() {
+        document.getElementById("time-warning").style.display = "block";
+        analyzerContainer.style.display = "none";
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/prepare_pipeline", true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              document.getElementById("time-warning").innerText = JSON.parse(
+                xhr.responseText
+              ).message;
+
+              document.getElementById("chat-container").style.display = "block";
+            } else {
+              document.getElementById("time-warning").innerText =
+                "Error: Unable to prepare pipeline. Please try again.";
+            }
+          }
+        };
+        xhr.send();
+      }
+
+      function showAnalyzer() {
+        document.getElementById("chat-container").style.display = "none";
+        document.getElementById("time-warning").style.display = "none";
+        document.getElementById("pipe-btn").style.display = "none";
+        analyzerContainer.style.display = "block";
+        document.getElementById("csv-file").style.display = "block";
+        document.getElementById("upload-btn").style.display = "block";
+        document.getElementById("new-content-area").style.display = "block";
+      }
+
+      uploadBtn.addEventListener("click", function () {
+        const file = csvFileInput.files[0];
+
+        if (file) {
+          const formData = new FormData();
+          formData.append("csv_file", file);
+          newContentArea.innerHTML = `<div>Processing...</div>`;
+
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "/upload_csv", true);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+              if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                const fresult = JSON.parse(response.results);
+
+                newContentArea.innerHTML = "";
+                fresult.forEach((item) => {
+                  const itemDiv = document.createElement("div");
+                  itemDiv.innerHTML = `<strong>Restaurant ID:</strong> ${
+                    item.Restaurant_id
+                  }, <strong>Confidence Level:</strong> ${
+                    item.Confidence_level
+                  }, <strong>Members:</strong> ${item.Members.join(", ")}`;
+                  newContentArea.appendChild(itemDiv);
+                });
+
+                document.getElementById("user-input2").style.display = "block";
+                document.getElementById("generate-btn").style.display = "block";
+              } else {
+                alert("An error occurred while uploading the CSV file.");
+              }
+            }
+          };
+          xhr.send(formData);
+        } else {
+          alert("Please upload a CSV file first.");
+        }
+      });
+
+      document
+        .getElementById("generate-btn")
+        .addEventListener("click", function () {
+          const userInput2 = document
+            .getElementById("user-input2")
+            .value.trim();
+
+          // Check if userInput2 is a number
+          if (!isNaN(userInput2)) {
+            // If userInput2 is a number, proceed with generating the image
+            if (userInput2 !== "") {
+              // Send user input to the backend
+              var xhr = new XMLHttpRequest();
+              xhr.open("POST", "/generate_image", true);
+              xhr.setRequestHeader("Content-Type", "application/json");
+              xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                  if (xhr.status === 200) {
+                    // If request is successful, handle the response
+                    document.getElementById("image1").style.display = "block";
+                    document.getElementById("image2").style.display = "block";
+                    const response = JSON.parse(xhr.responseText);
+
+                    // Display restaurant image
+                    const restaurantImage =
+                      document.getElementById("restaurantImage");
+                    restaurantImage.src = response.restaurant_image_path;
+
+                    // Display spam image
+                    const spamImage = document.getElementById("spamImage");
+                    spamImage.src = response.spam_image_path;
+                  } else {
+                    // If request fails, show an error message
+                    alert("An error occurred while generating the image.");
+                  }
+                }
+              };
+              xhr.send(JSON.stringify({ user_input: userInput2 }));
+            } else {
+              // If userInput2 is empty, show an error message
+              alert("Please enter some text first.");
+            }
+          } else {
+            // If userInput2 is not a number, show a warning message
+            alert("Please enter an ID number.");
+          }
+        });
+    </script>
+  </body>
+</html>
